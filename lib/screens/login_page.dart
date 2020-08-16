@@ -1,10 +1,51 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+import '../utils/animations/login_pager_animations.dart';
+
+class AnimatedLoginPage extends StatefulWidget {
+  @override
+  _AnimatedLoginPageState createState() => _AnimatedLoginPageState();
+}
+
+class _AnimatedLoginPageState extends State<AnimatedLoginPage>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 2),
+        reverseDuration: Duration(microseconds: 400));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _LoginPage(_controller);
+  }
+}
+
+class _LoginPage extends StatelessWidget {
   double _deviceHeight;
   double _deviceWidth;
   Color _primaryColor = Color.fromRGBO(125, 191, 211, 1.0);
   Color _secondaryColor = Color.fromRGBO(169, 234, 241, 1.0);
+  AnimationController _controller;
+
+  EnterAnimation _enterAnimation;
+
+  _LoginPage(_controller) {
+    _controller = _controller;
+    _enterAnimation = EnterAnimation(_controller);
+    _controller.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +83,28 @@ class LoginPage extends StatelessWidget {
 
   Widget _avatarWidget() {
     double _circleD = _deviceHeight * 0.25;
-    return Container(
-      height: _circleD,
-      width: _circleD,
-      decoration: BoxDecoration(
-        color: _secondaryColor,
-        borderRadius: BorderRadius.circular(500),
-        image: DecorationImage(
-          image: AssetImage('assets/images/judi_avatar.jpg'),
-        ),
-      ),
-    );
+
+    return AnimatedBuilder(
+        animation: _enterAnimation.controller,
+        builder: (BuildContext _contex, Widget _widget) {
+          //print(_enterAnimation.circleSize);
+          return Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.diagonal3Values(_enterAnimation.circleSize.value,
+                _enterAnimation.circleSize.value, 1),
+            child: Container(
+              height: _circleD,
+              width: _circleD,
+              decoration: BoxDecoration(
+                color: _secondaryColor,
+                borderRadius: BorderRadius.circular(500),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/judi_avatar.jpg'),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   Widget _emailTextField() {
@@ -98,8 +150,8 @@ class LoginPage extends StatelessWidget {
 
   Widget _loginButton() {
     return MaterialButton(
-      minWidth: _deviceWidth * 0.38,
-      height: _deviceHeight * 0.055,
+      minWidth: _deviceWidth * 0.28,
+      height: _deviceHeight * 0.060,
       color: Colors.white,
       child: Text(
         "LOG IN",

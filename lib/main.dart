@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Authentification',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginPage(),
+      home: AnimatedLoginPage(),
     );
   }
 }
