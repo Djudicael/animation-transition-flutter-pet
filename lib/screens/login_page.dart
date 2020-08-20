@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../utils/animations/login_pager_animations.dart';
+import 'home_page.dart';
+import '../utils/pages_routes/fade_page_route.dart';
 
 class AnimatedLoginPage extends StatefulWidget {
   @override
@@ -16,7 +18,7 @@ class _AnimatedLoginPageState extends State<AnimatedLoginPage>
     super.initState();
     _controller = AnimationController(
         vsync: this,
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 1),
         reverseDuration: Duration(microseconds: 400));
   }
 
@@ -41,16 +43,21 @@ class _LoginPage extends StatelessWidget {
 
   EnterAnimation _enterAnimation;
 
-  _LoginPage(_controller) {
-    _controller = _controller;
+  _LoginPage(this._controller) {
     _enterAnimation = EnterAnimation(_controller);
     _controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    _deviceHeight = MediaQuery.of(context).size.height;
-    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    _deviceWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return Scaffold(
       backgroundColor: _primaryColor,
@@ -73,7 +80,7 @@ class _LoginPage extends StatelessWidget {
               SizedBox(
                 height: _deviceHeight * 0.10,
               ),
-              _loginButton(),
+              _loginButton(context),
             ],
           ),
         ),
@@ -148,7 +155,7 @@ class _LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginButton() {
+  Widget _loginButton(BuildContext _context) {
     return MaterialButton(
       minWidth: _deviceWidth * 0.28,
       height: _deviceHeight * 0.060,
@@ -161,7 +168,19 @@ class _LoginPage extends StatelessWidget {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.0),
           side: BorderSide(color: Colors.white)),
-      onPressed: () {},
+      onPressed: () async {
+        await _controller.reverse();
+        Navigator.pushReplacement(
+            _context,
+            FadePageRoute(AnimationHomePage(),) ,
+        );
+      },
     );
   }
 }
+
+//MaterialPageRoute(
+//builder: (BuildContext _context) {
+//return HomePage();
+//},
+//)
